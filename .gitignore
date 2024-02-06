@@ -2,11 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+clone-env
 # C extensions
 *.so
 
 # Distribution / packaging
+Python-3.12.1
 .Python
 build/
 develop-eggs/
