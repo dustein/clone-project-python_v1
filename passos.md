@@ -14,6 +14,9 @@ Copiar a chave, e ir ate planos de utilizacao. Na criacao podemos ate limitar a 
 Entre e configure o estágio e API para adicionar ao plano de uso.
 Agora vamos na Chave de API para copiar a Key. Essa Key teremos que colocar no header da nossa requisicao feita no postman por ex (configurar key "x-api-key" e valor a key gerada na aws).
 
+(outro vídeo https://www.youtube.com/watch?v=V-ac_ZvdAW4) - 
+
+- Com tudo isso configurado, agora sim vamos escrever o código em Python.
 - Agora vamos efetivmente ao código Python.
 O nome do nosso arquivo tem que ser o mesmo da função que configurmos, ou seja, lambda_function.
 E criamos a funcao lambda_handler, que será efetivamente o endpoint que chamará os métodos que criarmos.
@@ -21,10 +24,7 @@ Vamo simportar boto3, json, e logging.
 
 Com o logger, vamos pegar o log do event para as informaçoes do request. Depois extrair o metodo HTTP do nosso objeto proveniente do evento. Em seguida, vamos capturar o path do evento tambem. 
 
-
-(outro vídeo https://www.youtube.com/watch?v=V-ac_ZvdAW4) - 
-
-- Com tudo isso configurado, agora sim vamos escrever o código em Python.
+(o objeto que recebemos do DynamoDB não é de um tipo suportado pelo json encoder default, então temos que codificar nosso custom decode para os numeros decimais vindos do Dynamo sejam convertidos para Float. Assim, criamos um arquivo separado que nomeamos custom_encoder.py)
 
 
 
@@ -35,5 +35,9 @@ Com o logger, vamos pegar o log do event para as informaçoes do request. Depois
 
 
 
-links úteis: https://www.freecodecamp.org/portuguese/news/como-gerenciar-diversas-versoes-do-python-e-ambientes-virtuais/
+
+links úteis: 
+https://www.freecodecamp.org/portuguese/news/como-gerenciar-diversas-versoes-do-python-e-ambientes-virtuais/
+
+https://stackoverflow.com/questions/70343666/python-boto3-float-types-are-not-supported-use-decimal-types-instead
 
