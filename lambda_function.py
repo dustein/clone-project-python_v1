@@ -40,8 +40,8 @@ def lambda_handler(event, context):
   
   return response
 
-def getAllJobs():
-  
+# açoes 
+def getJobById(jobID): 
   try:
     response = table.get_item(
       Key = {'jobID': jobID}
@@ -50,7 +50,85 @@ def getAllJobs():
       return buildResponse(200, response['Item'])
     return buildResponse(404, {"message":"jobID %s not found" % jobID})
   except:
-    logger.exception("")
+    logger.exception("A busca pelo Job não apresentou resultado!")
+
+def getAllJobs(jobID):
+  try:
+    response = table.scan()
+    result = response['Items']
+    # este while é para caso a tabela seja muito grande pode haver erro de evauated key, então pegamos de onde parou e apensamos (estendemos) juntando tudo para ter o resultado final.
+    while 'LastEvaluatedKey' in response:
+      response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+      result.extend(response['Items'])
+    
+    body = {
+      'products': result
+    }
+
+    return buildResponse(200, body)
+  
+  except:
+    logger.exception("A busca não apresentou resultados...")
+
+def createJob(requestBody):
+  try:
+
+    table.put_item(Item=requestBody)
+
+    body = {
+      "Operation": "SAVE",
+      "Message": "Sucess",
+      "Item": requestBody
+    }
+    return buildResponse(200, body)
+  
+  except:
+    logger.exception("Não foi possível a criação do job.")
+
+def modifyJob(jobID, updateKey, updateValue):
+  try:
+    response = table.update_item(
+      Key = {
+        'jobID': jobID
+      },
+      UpdateExpression = 'set %s = :value' % updateKey,
+      ExpressionAttributeValues = {
+        ':value': updateValue
+      },
+      ReturnValues = 'UPDATED_NEW'
+    )
+
+    body = {
+      "Operation":"UPDATE",
+      "Message":"SUCCESS",
+      "UpdatedAttributes": response
+    }
+
+    return buildResponse(200, body)
+
+  except:
+    logger.exception("Não foi possível a modificação.")
+
+def deleteJob(jobID):
+  try:
+    response = table.delete_item(
+      Key = {
+        'jobID': jobID
+      },
+      ReturnValues = 'ALL_OLD'
+    )
+
+    body = {
+      "Operation": "DELETE",
+      "Message": "SUCCESS",
+      "deletedItem": response
+    }
+    return buildResponse(200, body)
+  
+  except:
+    logger.exception("Não foi possível deletar.")
+
+
 def buildResponse(statusCode, body=None):
   response = {
     'statusCode': statusCode,
