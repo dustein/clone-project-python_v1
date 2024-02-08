@@ -7,6 +7,8 @@ class CustomEncoder(json.JSONEncoder):
       return float(obj)
     
     return json.JSONEncoder.default(self, obj)
+  
+
 # import json
 
 # def lambda_handler():
