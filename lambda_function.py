@@ -25,16 +25,21 @@ def lambda_handler(event, context):
 
   if httpMethod == getMethod and path == inicialPath:
     response = buildResponse(200)
+
   elif httpMethod == getMethod and path == jobsPath:
     response = getAllJobs(event['queryStringParameters']['jobID'])
+  
   elif httpMethod == postMethod and path == jobsPath:
     response = createJob(json.loads(event['body']))
+  
   elif httpMethod == deleteMethod and path == jobsPath:
     requestBody = json.loads(event['body'])
     response = modifyJob(requestBody['jobID'], requestBody['updateKey'], requestBody['updateValue'])
+  
   elif httpMethod == deleteMethod and path == jobsPath:
     requestBody = json.loads(event['body'])
     response = deleteJob(requestBody['jobID'])
+  
   else:
     response = buildResponse(404, 'Not Found!')
   
