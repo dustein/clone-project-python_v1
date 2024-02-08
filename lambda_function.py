@@ -20,8 +20,8 @@ jobsPath = '/jobs'
 
 def lambda_handler(event, context):
   logger.info(event)
-  httpMethod = event['httpMethod']
-  path = event['path']
+  httpMethod = event["requestContext"]["http"]["method"]
+  path = event["requestContext"]["http"]["path"]
 
   if httpMethod == getMethod and path == inicialPath:
     response = buildResponse(200)
@@ -139,5 +139,3 @@ def buildResponse(statusCode, body=None):
   }
   if body is not None:
     response['body'] = json.dumps(body, cls=CustomEncoder)
-
-
