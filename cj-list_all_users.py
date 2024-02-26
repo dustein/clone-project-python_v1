@@ -1,14 +1,16 @@
 import json
 import boto3
+from boto3.dynamodb.conditions import Attr
 from custom_encoder import CustomEncoder
-# client = boto3.client('dynamodb')
-dynamodbTableName = 'clone-jobs1v'
+
+dynamodbTableName = 'clone-jobs'
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(dynamodbTableName)
 
 def lambda_handler(event, context):
 
-  data = table.scan()
+  # data = table.scan()
+  data = table.scan(FilterExpression=Attr('PK').begins_with('USER#'))
   res_data = data['Items']
 
   while 'LastEvaluatedKey' in data:
